@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="inc">
+      <UniqueIdentifier>{2d438628-348f-478e-ab68-6c758e1891b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="inc\external">
+      <UniqueIdentifier>{d204c86f-55ac-43bf-a8d3-850be1d9b6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2b14a2c3-414a-433b-9461-dfe7e2daedc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\external">
+      <UniqueIdentifier>{d255b16b-56fa-4ff3-976d-a98bba4bf66c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\external\httpclient.h">
+      <Filter>inc\external</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\external\ssh2client.h">
+      <Filter>inc\external</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\external\crypto.h">
+      <Filter>inc\external</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\external\httpclient.cpp">
+      <Filter>src\external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\external\ssh2client.cpp">
+      <Filter>src\external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\external\crypto.cpp">
+      <Filter>src\external</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
