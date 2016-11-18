@@ -56,6 +56,7 @@ public:
 	};
 
 	BitFlags flags;
+	mutable Mutex mutex;
 
 protected:
 

@@ -126,6 +126,7 @@ void KO_Policy_sftp_handle::destroy(type& o)
 
 SftpSession::SftpSession(const Ssh2Client& o):Ssh2Object(o)
 {
+	LockGuard<Mutex> lock(o.mutex);
 
 	if(!session.get())
 	{
@@ -553,6 +554,7 @@ bool Ssh2Object::_read_channel(KO_Handle<KO_Policy_ssh2_channel>& channel,String
 
 KO_Handle<KO_Policy_ssh2_channel> Ssh2Object::_open_channel()
 {
+	LockGuard<Mutex> lock(mutex);
 
 	if(!session.ok())
 	{
@@ -581,6 +583,7 @@ KO_Handle<KO_Policy_ssh2_channel> Ssh2Object::_open_channel()
 
 bool Ssh2Client::Execute(const String& commandline_,StringBuffer<char>& sb)
 {
+	
 	KO_Handle<KO_Policy_ssh2_channel>  channel=_open_channel();
 	if(!channel.ok())
 	{
@@ -618,7 +621,10 @@ bool Ssh2Client::Execute(const String& commandline_,StringBuffer<char>& sb)
 
 bool Ssh2Client::Connect(const String& ip,int port)
 {
-	Close();
+	LockGuard<Mutex> lock(mutex);
+
+	session.reset();
+	socket.close();
 
 	if(!socket.connect(ip,port))
 	{
@@ -661,6 +667,8 @@ bool Ssh2Client::Connect(const String& ip,int port)
 
 bool Ssh2Client::Login(const String& username,const String& password,const String& fp_pub,const String& fp_priv)
 {
+	LockGuard<Mutex> lock(mutex);
+
 	if(!session.ok())
 	{
 		return false;
@@ -820,6 +828,7 @@ bool Ssh2Channel::Execute(const String& commandline_,StringBuffer<char>& sb)
 
 void Ssh2Client::Close()
 {
+	LockGuard<Mutex> lock(mutex);
 	session.reset();
 	socket.close();
 }

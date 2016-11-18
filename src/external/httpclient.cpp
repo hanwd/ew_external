@@ -443,7 +443,18 @@ public:
 		return 0;
 	}
 };
-
+class CallableFunctionHttpSetReferer : public CallableFunctionHttp
+{
+public:
+	int __fun_call(Executor& ewsl,int pm)
+	{
+		ewsl.check_pmc(this,pm,1);
+		HttpClient& http(GetTarget(ewsl));
+		String val=ewsl.ci0.nbx[1].ref<String>();		
+		http.SetReferer(val);
+		return 0;
+	}
+};
 
 class CallableFunctionHttpSetCookie : public CallableFunctionHttp
 {
@@ -523,6 +534,7 @@ public:
 		value["set_cookie_file"].reset(new CallableFunctionHttpSetCookieFile);
 		value["set_cookie_save"].reset(new CallableFunctionHttpSetCookieSave);
 		value["set_useragent"].reset(new CallableFunctionHttpSetUserAgent);
+		value["set_referer"].reset(new CallableFunctionHttpSetReferer);
 
 		value["set_cookie"].reset(new CallableFunctionHttpSetCookie);
 		value["get_cookie"].reset(new CallableFunctionHttpGetCookie);
