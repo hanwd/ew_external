@@ -315,14 +315,14 @@ bool SftpSession::Remove(const String& fp)
 	return rc==0;
 }
 
-class SerializerSftp : public SerializerDuplex
+class SerializerSftp : public IStreamData2
 {
 public:
 
 	SftpSession sftp;
 	KO_Handle<KO_Policy_sftp_handle> impl;
 
-	void Close()
+	void close()
 	{
 		impl.reset();
 	}
@@ -357,7 +357,7 @@ public:
 		}
 
         libssh2_sftp_seek64((LIBSSH2_SFTP_HANDLE*)impl.get(), pos);
-		return tell();
+		return tellg();
 	}
 
 	virtual int64_t tell()
@@ -376,7 +376,7 @@ public:
 		libssh2_sftp_fsync((LIBSSH2_SFTP_HANDLE*)impl.get());
 	}
 
-	virtual int recv(char* buf,int len)
+	virtual int recv(char* buf,size_t len)
 	{
 		if(!impl.ok()) return -1;
 
@@ -400,7 +400,7 @@ public:
 		return -1;
 	}
 
-	virtual int32_t send(const char* buf,int len)
+	virtual int32_t send(const char* buf,size_t len)
 	{
 
 		if(!impl.ok()) return -1;
@@ -455,7 +455,7 @@ Stream SftpSession::Download(const String& fp)
 		}
 	} while (!sftp_handle);
 
-	stream.assign(SharedPtrT<SerializerDuplex>(new SerializerSftp(*this,sftp_handle)));
+	stream.assign(new SerializerSftp(*this,sftp_handle));
 
 	return stream;
 }
@@ -497,7 +497,7 @@ Stream SftpSession::Upload(const String& fp,int flag)
 		}
 	} while (!sftp_handle);
 
-	stream.assign(SharedPtrT<SerializerSftp>(new SerializerSftp(*this,sftp_handle)));
+	stream.assign(new SerializerSftp(*this,sftp_handle));
 	if(flag&FLAG_FILE_APPEND)
 	{
 		int64_t pos=stream.seekp(0,SEEKTYPE_END);
